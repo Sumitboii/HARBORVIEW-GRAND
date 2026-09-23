@@ -8,7 +8,6 @@ hotel-assistant/
   backend/     Express API: knowledge-base Q&A, intent routing, availability
   frontend/    Next.js chat UI
   docs/        Requirements, architecture, API/data contracts, test plan, audit
-  KIRO_PROMPT.md   Ready-to-paste spec-first prompt for Kiro
 ```
 
 ## Quick start
