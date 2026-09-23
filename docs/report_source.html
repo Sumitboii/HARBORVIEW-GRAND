@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Harborview Grand - Project Report</title>
+<style>
+@page { size: A4 portrait; margin: 0; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --brass:#8B6020; --gold:#C49A3C; --ink:#1A2740; --cream:#F7F4EE;
+  --border:#C8B888; --muted:#6B7888; --codebg:#EEEBE3; --stripe:#F4F1EB;
+  --px:22mm; --pt:18mm; --pb:18mm;
+}
+body {
+  font-family: Georgia,'Times New Roman',serif;
+  font-size:10pt; color:var(--ink); line-height:1.7; background:#fff;
+  -webkit-print-color-adjust:exact; print-color-adjust:exact;
+}
+/* COVER */
+.cover {
+  width:210mm; min-height:297mm; background:var(--cream);
+  page-break-after:always; break-after:page; position:relative; overflow:hidden;
+}
+.cover-top { width:100%; height:18mm; background:var(--brass); display:block; }
+.cover-stripe { width:100%; height:3mm; background:var(--gold); display:block; }
+.cover-body { padding:14mm 28mm 0 28mm; text-align:center; }
+.cover-icon { font-size:42pt; color:var(--brass); line-height:1; display:block; margin-bottom:8mm; }
+.cover-hotel { font-size:22pt; font-weight:bold; color:var(--brass); letter-spacing:0.14em;
+  text-transform:uppercase; display:block; margin-bottom:3mm; }
+.cover-tagline { font-size:10pt; color:var(--muted); font-style:italic; display:block; margin-bottom:7mm; }
+.cover-rule { width:80mm; height:1.5px; background:var(--brass); margin:0 auto 7mm; display:block; }
+.cover-doc-title { font-size:15pt; font-weight:bold; color:var(--ink); display:block; margin-bottom:3mm; }
+.cover-doc-sub { font-size:9.5pt; color:var(--muted); display:block; margin-bottom:10mm; }
+.cover-card {
+  display:inline-block; background:#fff; border:1.5px solid var(--border);
+  border-radius:6px; padding:6mm 9mm; text-align:left; width:120mm;
+}
+.c-row { margin-bottom:3.5mm; }
+.c-row:last-child { margin-bottom:0; }
+.c-label { display:block; font-size:7pt; font-weight:bold; color:var(--brass);
+  text-transform:uppercase; letter-spacing:0.08em; margin-bottom:0.5mm; }
+.c-val { display:block; font-size:9.5pt; color:var(--ink); }
+.cover-footer {
+  position:absolute; bottom:17mm; left:0; right:0;
+  text-align:center; font-size:8pt; color:var(--muted); font-style:italic;
+}
+.cover-bot { position:absolute; bottom:0; left:0; right:0; height:10mm; background:var(--brass); display:block; }
+/* PAGES */
+.page {
+  width:210mm; min-height:297mm;
+  padding:var(--pt) var(--px) var(--pb) var(--px);
+  page-break-after:always; break-after:page; background:#fff;
+}
+.page.last { page-break-after:auto; break-after:auto; }
+/* TOC */
+.toc-heading { font-size:18pt; font-weight:bold; color:var(--brass);
+  border-bottom:2.5px solid var(--brass); padding-bottom:3mm; margin-bottom:9mm; }
+.toc-row { display:block; overflow:hidden; margin-bottom:4mm; line-height:1.3; }
+.toc-num { float:left; width:10mm; font-weight:bold; color:var(--brass); font-size:10pt; }
+.toc-name { float:left; font-size:10pt; color:var(--ink); }
+.toc-pg { float:right; font-size:10pt; color:var(--muted); }
+/* CONTENT */
+.eyebrow { font-size:7pt; font-weight:bold; color:var(--brass);
+  text-transform:uppercase; letter-spacing:0.12em; margin-bottom:1.5mm; }
+h1 { font-size:17pt; font-weight:bold; color:var(--ink);
+  border-bottom:2.5px solid var(--brass); padding-bottom:3mm; margin-bottom:6mm; line-height:1.2; }
+h2 { font-size:11pt; font-weight:bold; color:var(--ink);
+  border-left:3px solid var(--brass); padding-left:3mm;
+  margin-top:7mm; margin-bottom:3mm; line-height:1.3; }
+h3 { font-size:10.5pt; font-weight:bold; color:var(--brass); margin-top:4mm; margin-bottom:2mm; }
+p { margin-bottom:3.5mm; text-align:justify; }
+ul,ol { padding-left:5mm; margin-bottom:3.5mm; }
+li { margin-bottom:1.5mm; }
+code { font-family:'Courier New',Courier,monospace; font-size:8.2pt;
+  background:var(--codebg); padding:0.3mm 1.5mm; border-radius:2px; color:#3B2800; }
+pre { font-family:'Courier New',Courier,monospace; font-size:7.6pt; line-height:1.55;
+  background:var(--codebg); border:1px solid var(--border); border-left:3.5px solid var(--brass);
+  border-radius:3px; padding:4mm 4.5mm; margin-bottom:5mm;
+  white-space:pre-wrap; word-break:break-word;
+  page-break-inside:avoid; break-inside:avoid; color:#2A1800; }
+pre code { background:none; padding:0; font-size:inherit; color:inherit; }
+table { width:100%; border-collapse:collapse; margin-bottom:5mm; font-size:8.8pt;
+  page-break-inside:avoid; break-inside:avoid; }
+thead tr { background:var(--brass); color:#fff;
+  -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+th { padding:2.5mm 3mm; text-align:left; font-size:8.2pt; font-weight:bold; }
+td { padding:2.5mm 3mm; border-bottom:1px solid #DDD8CC; vertical-align:top; }
+tbody tr:nth-child(even) td {
+  background:var(--stripe); -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+.doc-footer { margin-top:12mm; padding-top:3.5mm; border-top:1px solid var(--border);
+  font-size:8pt; color:var(--muted); font-style:italic; text-align:center; }
+</style>
+</head>
+<body>
+
+<!-- PAGE 1: COVER -->
+<div class="cover">
+  <span class="cover-top"></span>
+  <span class="cover-stripe"></span>
+  <div class="cover-body">
+    <span class="cover-icon">&#9875;</span>
+    <span class="cover-hotel">Harborview Grand</span>
+    <span class="cover-tagline">Luxury Waterfront Hotel &mdash; AI Concierge System</span>
+    <span class="cover-rule"></span>
+    <span class="cover-doc-title">Complete Project Report &amp; Documentation</span>
+    <span class="cover-doc-sub">Full-Stack AI-Powered Hotel Guest Assistant</span>
+    <div class="cover-card">
+      <div class="c-row"><span class="c-label">Developer</span><span class="c-val">Sumit Kumar Singh</span></div>
+      <div class="c-row"><span class="c-label">Assignment</span><span class="c-val">Full-Stack AI Hotel Guest Assistant</span></div>
+      <div class="c-row"><span class="c-label">Repository</span><span class="c-val">github.com/Sumitboii/HARBORVIEW-GRAND</span></div>
+      <div class="c-row"><span class="c-label">Live Demo</span><span class="c-val">harborview-grand.onrender.com</span></div>
+      <div class="c-row"><span class="c-label">Stack</span><span class="c-val">Next.js 14 &middot; Express.js &middot; Google Gemini 2.0 Flash</span></div>
+      <div class="c-row"><span class="c-label">Tests</span><span class="c-val">27 Jest &middot; 4 Playwright E2E &mdash; 100% passing</span></div>
+    </div>
+  </div>
+  <div class="cover-footer">Designed &amp; Developed by Sumit Kumar Singh &mdash; Full-Stack AI Solutions</div>
+  <span class="cover-bot"></span>
+</div>
+
+<!-- PAGE 2: TOC -->
+<div class="page">
+  <div class="toc-heading">Table of Contents</div>
+  <div class="toc-row"><span class="toc-num">1.</span><span class="toc-name">Assignment Overview</span><span class="toc-pg">3</span></div>
+  <div class="toc-row"><span class="toc-num">2.</span><span class="toc-name">What Was Built</span><span class="toc-pg">4</span></div>
+  <div class="toc-row"><span class="toc-num">3.</span><span class="toc-name">Tech Stack &mdash; What, Why &amp; How</span><span class="toc-pg">5</span></div>
+  <div class="toc-row"><span class="toc-num">4.</span><span class="toc-name">Project Structure</span><span class="toc-pg">6</span></div>
+  <div class="toc-row"><span class="toc-num">5.</span><span class="toc-name">Architecture &amp; Data Flow</span><span class="toc-pg">7</span></div>
+  <div class="toc-row"><span class="toc-num">6.</span><span class="toc-name">Backend Deep Dive</span><span class="toc-pg">8</span></div>
+  <div class="toc-row"><span class="toc-num">7.</span><span class="toc-name">Frontend Deep Dive</span><span class="toc-pg">9</span></div>
+  <div class="toc-row"><span class="toc-num">8.</span><span class="toc-name">AI Integration</span><span class="toc-pg">10</span></div>
+  <div class="toc-row"><span class="toc-num">9.</span><span class="toc-name">Knowledge Base</span><span class="toc-pg">11</span></div>
+  <div class="toc-row"><span class="toc-num">10.</span><span class="toc-name">API Reference</span><span class="toc-pg">12</span></div>
+  <div class="toc-row"><span class="toc-num">11.</span><span class="toc-name">Test Coverage</span><span class="toc-pg">13</span></div>
+  <div class="toc-row"><span class="toc-num">12.</span><span class="toc-name">Assignment Completion Checklist</span><span class="toc-pg">14</span></div>
+  <div class="toc-row"><span class="toc-num">13.</span><span class="toc-name">Design Decisions &amp; Trade-offs</span><span class="toc-pg">15</span></div>
+  <div class="toc-row"><span class="toc-num">14.</span><span class="toc-name">How to Run Locally</span><span class="toc-pg">16</span></div>
+</div>
+
+<!-- PAGE 3: SECTION 1 -->
+<div class="page">
+  <div class="eyebrow">Section 1</div>
+  <h1>Assignment Overview</h1>
+  <p>The assignment required building a full-stack AI-powered <strong>Hotel Guest Assistant</strong> &mdash; a chat interface where hotel guests can interact naturally with hotel services.</p>
+  <p>Core capabilities required:</p>
+  <ul>
+    <li>Ask natural-language questions about hotel policies, amenities, rooms, and services</li>
+    <li>Check live room availability using a structured date/guest form</li>
+    <li>Hold multi-turn conversations with context carried across messages</li>
+    <li>Receive grounded, hallucination-free answers from a hotel knowledge base</li>
+  </ul>
+  <h2>Required Questions to Handle</h2>
+  <table>
+    <thead><tr><th>#</th><th>Question</th><th>Type</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>What time is check-in?</td><td>FAQ / Policy</td></tr>
+      <tr><td>2</td><td>Does the hotel have a swimming pool?</td><td>Amenity</td></tr>
+      <tr><td>3</td><td>Which room is suitable for three guests?</td><td>Room Info</td></tr>
+      <tr><td>4</td><td>Is breakfast included?</td><td>Policy</td></tr>
+      <tr><td>5</td><td>What is the cancellation policy?</td><td>Policy</td></tr>
+      <tr><td>6</td><td>Do you have rooms available for a given date?</td><td>Availability</td></tr>
+    </tbody>
+  </table>
+  <p>All six are fully implemented and tested end-to-end.</p>
+</div>
+
+<!-- PAGE 4: SECTION 2 -->
+<div class="page">
+  <div class="eyebrow">Section 2</div>
+  <h1>What Was Built</h1>
+  <p><strong>Harborview Grand AI Concierge</strong> &mdash; a two-panel luxury hotel assistant with a left sidebar showing live hotel info and shortcuts, and a right chat panel powered by Google Gemini.</p>
+  <h2>Key Features Delivered</h2>
+  <ul>
+    <li><strong>Natural language Q&amp;A</strong> &mdash; Guests type any question; the system retrieves relevant hotel knowledge and generates a natural response via Gemini.</li>
+    <li><strong>Room availability checker</strong> &mdash; Structured form for check-in/check-out dates and guest count; returns real-time per-room inventory.</li>
+    <li><strong>Multi-turn conversation</strong> &mdash; Conversation ID maintained across messages; follow-up questions use prior context automatically.</li>
+    <li><strong>Hallucination prevention</strong> &mdash; LLM grounded strictly in retrieved facts; availability numbers never pass through the LLM.</li>
+    <li><strong>Graceful fallbacks</strong> &mdash; Works without any API key (KB fallback mode); API errors handled silently.</li>
+    <li><strong>Intent detection</strong> &mdash; Keywords and patterns route messages to the correct handler before any LLM call.</li>
+    <li><strong>Interactive sidebar</strong> &mdash; Every section (schedule, dining, amenities, contact) triggers a targeted chat query on click.</li>
+    <li><strong>Hydration-safe UI</strong> &mdash; SSR/client timestamp mismatch resolved with <code>suppressHydrationWarning</code> and <code>useEffect</code>-based injection.</li>
+    <li><strong>Deployed on Render</strong> &mdash; Backend and frontend as separate services via <code>render.yaml</code> Blueprint.</li>
+  </ul>
+</div>
+
+<!-- PAGE 5: SECTION 3 -->
+<div class="page">
+  <div class="eyebrow">Section 3</div>
+  <h1>Tech Stack &mdash; What, Why &amp; How</h1>
+  <h2>Backend</h2>
+  <table>
+    <thead><tr><th>Technology</th><th>What it is</th><th>Why chosen</th><th>How used</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Node.js</strong></td><td>JS runtime</td><td>Matches frontend; fast I/O</td><td>Runs the Express server</td></tr>
+      <tr><td><strong>Express.js</strong></td><td>Web framework</td><td>Minimal, fast; single endpoint needed</td><td>Chat route, health, error handling</td></tr>
+      <tr><td><strong>dotenv</strong></td><td>Env loader</td><td>Standard secrets management</td><td>Loads <code>GEMINI_API_KEY</code>, <code>PORT</code></td></tr>
+      <tr><td><strong>cors</strong></td><td>CORS middleware</td><td>Required for cross-origin requests</td><td>Configured with origin allowlist</td></tr>
+      <tr><td><strong>Gemini API</strong></td><td>LLM</td><td>Free tier; strong instruction following</td><td>Natural-language answer generation</td></tr>
+      <tr><td><strong>Jest</strong></td><td>Test runner</td><td>Node.js industry standard</td><td>27 tests across 3 suites</td></tr>
+      <tr><td><strong>Supertest</strong></td><td>HTTP test client</td><td>Tests routes without a live server</td><td>API integration tests</td></tr>
+    </tbody>
+  </table>
+  <h2>Frontend</h2>
+  <table>
+    <thead><tr><th>Technology</th><th>What it is</th><th>Why chosen</th><th>How used</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Next.js 14</strong></td><td>React framework</td><td>Preferred by brief; SSR + HMR</td><td>Routing, production builds</td></tr>
+      <tr><td><strong>React 18</strong></td><td>UI library</td><td>Industry standard</td><td>All UI components</td></tr>
+      <tr><td><strong>CSS (globals.css)</strong></td><td>Styling</td><td>No extra deps; full layout control</td><td>Two-column layout, brand palette</td></tr>
+      <tr><td><strong>Playwright</strong></td><td>E2E testing</td><td>Official Next.js E2E tool</td><td>4 end-to-end test scenarios</td></tr>
+      <tr><td><strong>Google Fonts</strong></td><td>Typography</td><td>Cinzel (luxury) + Jakarta Sans (body)</td><td>Hotel name, headings, body text</td></tr>
+    </tbody>
+  </table>
+  <h2>Infrastructure</h2>
+  <table>
+    <thead><tr><th>Technology</th><th>Why chosen</th><th>How used</th></tr></thead>
+    <tbody>
+      <tr><td><strong>GitHub</strong></td><td>Required for Render auto-deploy</td><td>Source of truth; triggers deploys on push</td></tr>
+      <tr><td><strong>Render</strong></td><td>Free tier; Node.js native; Blueprint YAML</td><td>API + frontend as separate services</td></tr>
+      <tr><td><strong>render.yaml</strong></td><td>Declarative; one-click deploy</td><td>Defines both services, env vars, build commands</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- PAGE 6: SECTION 4 -->
+<div class="page">
+  <div class="eyebrow">Section 4</div>
+  <h1>Project Structure</h1>
+<pre><code>hotel-assistant/
+&#9500;&#9472;&#9472; backend/
+&#9474;   &#9500;&#9472;&#9472; src/
+&#9474;   &#9474;   &#9500;&#9472;&#9472; app.js                     # Express app, CORS, error handlers
+&#9474;   &#9474;   &#9500;&#9472;&#9472; server.js                  # Entry point &mdash; binds PORT
+&#9474;   &#9474;   &#9500;&#9472;&#9472; routes/
+&#9474;   &#9474;   &#9474;   &#9492;&#9472;&#9472; chat.js                # POST /api/chat &mdash; routing hub
+&#9474;   &#9474;   &#9500;&#9472;&#9472; services/
+&#9474;   &#9474;   &#9474;   &#9500;&#9472;&#9472; intentService.js       # Keyword/regex intent classifier
+&#9474;   &#9474;   &#9474;   &#9500;&#9472;&#9472; retrievalService.js    # TF-IDF keyword retrieval
+&#9474;   &#9474;   &#9474;   &#9500;&#9472;&#9472; llmService.js          # Gemini API calls + KB fallback
+&#9474;   &#9474;   &#9474;   &#9500;&#9472;&#9472; availabilityService.js # Deterministic room inventory
+&#9474;   &#9474;   &#9474;   &#9492;&#9472;&#9472; conversationStore.js   # In-memory conversation history
+&#9474;   &#9474;   &#9500;&#9472;&#9472; data/
+&#9474;   &#9474;   &#9474;   &#9492;&#9472;&#9472; knowledgeBase.json     # Hotel facts: rooms, policies, amenities
+&#9474;   &#9474;   &#9492;&#9472;&#9472; __tests__/
+&#9474;   &#9474;       &#9500;&#9472;&#9472; chat.test.js           # 12 API integration tests
+&#9474;   &#9474;       &#9500;&#9472;&#9472; availabilityService.test.js  # 12 unit tests
+&#9474;   &#9474;       &#9492;&#9472;&#9472; retrieval_intent.test.js     # 3 unit tests
+&#9474;   &#9500;&#9472;&#9472; .env.example
+&#9474;   &#9492;&#9472;&#9472; package.json
+&#9500;&#9472;&#9472; frontend/
+&#9474;   &#9500;&#9472;&#9472; pages/
+&#9474;   &#9474;   &#9500;&#9472;&#9472; _app.js                    # Global CSS import
+&#9474;   &#9474;   &#9492;&#9472;&#9472; index.js                   # Main page &mdash; two-column layout
+&#9474;   &#9500;&#9472;&#9472; components/
+&#9474;   &#9474;   &#9500;&#9472;&#9472; ChatWindow.js              # Chat state, forwardRef, imperative handle
+&#9474;   &#9474;   &#9500;&#9472;&#9472; MessageBubble.js           # Message renderer (text/typing/avail/error)
+&#9474;   &#9474;   &#9492;&#9472;&#9472; AvailabilityForm.js        # Date picker + guest count + results
+&#9474;   &#9500;&#9472;&#9472; styles/globals.css             # All styles &mdash; layout, sidebar, animations
+&#9474;   &#9500;&#9472;&#9472; tests/e2e.spec.js              # 4 Playwright E2E tests
+&#9474;   &#9492;&#9472;&#9472; package.json
+&#9500;&#9472;&#9472; docs/
+&#9474;   &#9500;&#9472;&#9472; ARCHITECTURE.md  &#9500;&#9472;&#9472; REQUIREMENTS.md
+&#9474;   &#9500;&#9472;&#9472; TEST_PLAN.md      &#9492;&#9472;&#9472; REQUIREMENT_AUDIT.md
+&#9500;&#9472;&#9472; .gitignore
+&#9500;&#9472;&#9472; render.yaml                        # Render Blueprint &mdash; both services
+&#9492;&#9472;&#9472; README.md</code></pre>
+</div>
+
+<!-- PAGE 7: SECTION 5 -->
+<div class="page">
+  <div class="eyebrow">Section 5</div>
+  <h1>Architecture &amp; Data Flow</h1>
+<pre><code>Browser (Next.js)             Backend (Express)             Gemini API
+&#9484;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9488;  HTTPS   &#9484;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9488;      &#9484;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9488;
+&#9474;  Sidebar        &#9474;          &#9474;  POST /api/chat       &#9474;&#9472;&#9472;&#9472;&#9472;&#9472;&#9658;&#9474;  Gemini  &#9474;
+&#9474;  ChatWindow     &#9474;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9658;&#9474;   &darr; intentService    &#9474;      &#9474;(optional)&#9474;
+&#9474;  AvailForm      &#9474;          &#9474;   &darr; retrievalService &#9474;&#9668;&#9472;&#9472;&#9472;&#9472;&#9472;&#9474;          &#9474;
+&#9474;  MessageBubble  &#9474;&#9668;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9474;   &darr; llmService       &#9474;      &#9492;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9496;
+&#9492;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9496;  JSON    &#9474;   &darr; availService     &#9474;
+                             &#9474;   &darr; convStore        &#9474;
+                             &#9492;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9524;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9496;
+                                        &#9474;
+                             knowledgeBase.json</code></pre>
+  <h2>Request Lifecycle</h2>
+  <ol>
+    <li><strong>Guest submits message</strong> via chat input or sidebar shortcut click</li>
+    <li><strong>Frontend sends</strong> <code>POST /api/chat</code> with <code>{ message, conversationId? }</code></li>
+    <li><strong>Backend validates</strong> &mdash; empty message returns <code>400 INVALID_REQUEST</code></li>
+    <li><strong>Intent detection</strong> &mdash; <code>detectIntent()</code> classifies the message:
+      <ul>
+        <li><code>greeting</code> / <code>gratitude</code> &rarr; immediate reply, no LLM call</li>
+        <li><code>booking_request</code> &rarr; acknowledgement using conversation context</li>
+        <li><code>availability</code> &rarr; availability handler if dates present</li>
+        <li><code>availability_needs_details</code> &rarr; prompt for dates/guest count</li>
+        <li><code>general_question</code> &rarr; retrieve + LLM path</li>
+      </ul>
+    </li>
+    <li><strong>Retrieval</strong> &mdash; keyword-scores all KB chunks; top matches sent as LLM context</li>
+    <li><strong>LLM call</strong> &mdash; Gemini generates answer; on failure silently falls back to <code>mockAnswer()</code></li>
+    <li><strong>Conversation stored</strong> &mdash; turn appended to in-memory store by <code>conversationId</code></li>
+    <li><strong>Structured JSON response</strong> returned &rarr; frontend renders as bubble or availability card</li>
+  </ol>
+</div>
+
+<!-- PAGE 8: SECTION 6 -->
+<div class="page">
+  <div class="eyebrow">Section 6</div>
+  <h1>Backend Deep Dive</h1>
+  <h2>intentService.js &mdash; Intent Classification</h2>
+  <table>
+    <thead><tr><th>Intent</th><th>Trigger Keywords / Patterns</th></tr></thead>
+    <tbody>
+      <tr><td><code>greeting</code></td><td>hi, hello, hey, good morning/evening</td></tr>
+      <tr><td><code>gratitude</code></td><td>thank you, thanks, great, awesome</td></tr>
+      <tr><td><code>booking_request</code></td><td>book, reserve, I want a room</td></tr>
+      <tr><td><code>availability</code></td><td>availability keywords + valid dates in message</td></tr>
+      <tr><td><code>availability_needs_details</code></td><td>availability keyword, no dates present</td></tr>
+      <tr><td><code>general_question</code></td><td>everything else</td></tr>
+    </tbody>
+  </table>
+  <p><strong>Why keyword-based?</strong> Intent is binary and structured. Regex is deterministic, fast, and unit-testable &mdash; AI would add non-determinism for no gain.</p>
+  <h2>retrievalService.js &mdash; Knowledge Base Retrieval</h2>
+  <p>TF-IDF-style keyword overlap scoring: tokenises the question, scores each KB chunk by overlap count, returns top-N chunks above threshold as LLM grounding context.</p>
+  <p><strong>Why not embeddings?</strong> The KB has ~15 facts. Embeddings add a vector DB, extra API call, and model dependency for zero accuracy gain at this scale.</p>
+  <h2>llmService.js &mdash; Gemini Integration + Fallback</h2>
+<pre><code>callLLM(question, contextChunks, conversationHistory)
+ &boxvr; System prompt restricts model to provided hotel data only
+ &boxvr; Last 10 conversation turns sent as message history
+ &boxvr; Calls Gemini API (models/gemini-2.0-flash)
+ &boxvr; On 429 / 503 / timeout &rarr; fallback to mockAnswer()
+ &boxur; Returns { text, usedFallback, source }</code></pre>
+  <h2>availabilityService.js &mdash; Room Inventory</h2>
+  <p>Fully deterministic &mdash; validates dates, computes nights, returns fixed inventory. The LLM <strong>never</strong> sees inventory numbers.</p>
+  <table>
+    <thead><tr><th>Room Type</th><th>Max Guests</th><th>Price / Night</th></tr></thead>
+    <tbody>
+      <tr><td>Standard Queen</td><td>2</td><td>$149</td></tr>
+      <tr><td>Deluxe King</td><td>2</td><td>$189</td></tr>
+      <tr><td>Triple Room</td><td>3</td><td>$219</td></tr>
+      <tr><td>Family Suite</td><td>4</td><td>$279</td></tr>
+    </tbody>
+  </table>
+  <h2>conversationStore.js</h2>
+  <p>In-memory <code>Map</code>: <code>conversationId &rarr; [{ role, content }]</code>. Keeps last 10 turns per session. Resets on server restart &mdash; intentional for demo scope.</p>
+</div>
+
+<!-- PAGE 9: SECTION 7 -->
+<div class="page">
+  <div class="eyebrow">Section 7</div>
+  <h1>Frontend Deep Dive</h1>
+  <h2>pages/index.js &mdash; Layout &amp; Sidebar</h2>
+  <p>Two-column layout: 300px fixed sidebar (hotel info + clickable shortcuts) and a <code>flex-1</code> chat panel. Every sidebar item calls <code>chatRef.current.sendMessage(query)</code> via <code>useRef</code> + <code>forwardRef</code> + <code>useImperativeHandle</code>.</p>
+  <h2>ChatWindow.js &mdash; State Machine</h2>
+  <p>Exposed imperative handle: <code>sendMessage(text)</code>, <code>openAvailability()</code>, <code>toggleAvailability()</code>. Key state: <code>messages[]</code>, <code>conversationId</code>, <code>loading</code>, <code>showAvailabilityForm</code>, <code>availableQuestions[]</code>.</p>
+  <p><strong>Hydration fix:</strong> Timestamp starts as <code>null</code> during SSR, patched to <code>getTimeString()</code> in <code>useEffect</code> after client mount. <code>suppressHydrationWarning</code> on all timestamp spans eliminates the Next.js locale mismatch error.</p>
+  <h2>MessageBubble.js &mdash; Renderer</h2>
+  <table>
+    <thead><tr><th>Kind</th><th>What it renders</th></tr></thead>
+    <tbody>
+      <tr><td><code>text</code></td><td>Chat bubble &mdash; user right, assistant left</td></tr>
+      <tr><td><code>typing</code></td><td>Animated three-dot loading indicator</td></tr>
+      <tr><td><code>availability</code></td><td>Per-room results card with full pricing breakdown</td></tr>
+      <tr><td><code>error</code></td><td>Red bubble with "Unable to connect" header</td></tr>
+    </tbody>
+  </table>
+  <h2>AvailabilityForm.js</h2>
+  <p>Three inputs: check-in date, check-out date, number of adults. Client-side validation before submission. Results show per-room cards with name, capacity, price/night, total, and status (green "Available" or red "Sold Out").</p>
+  <h2>globals.css &mdash; Design Tokens</h2>
+  <table>
+    <thead><tr><th>Variable</th><th>Value</th><th>Usage</th></tr></thead>
+    <tbody>
+      <tr><td><code>--brass</code></td><td>#9E742C</td><td>Accents, borders, interactive highlights</td></tr>
+      <tr><td><code>--ink</code></td><td>#1B2A41</td><td>Primary text colour</td></tr>
+      <tr><td><code>--cream</code></td><td>#F8F6F0</td><td>Page background</td></tr>
+      <tr><td><code>--serif</code></td><td>Cinzel</td><td>Hotel name, developer card headings</td></tr>
+      <tr><td><code>--sans</code></td><td>Plus Jakarta Sans</td><td>All body text</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- PAGE 10: SECTION 8 -->
+<div class="page">
+  <div class="eyebrow">Section 8</div>
+  <h1>AI Integration</h1>
+  <h2>Model Used</h2>
+  <p><strong>Google Gemini 2.0 Flash</strong> (<code>models/gemini-2.0-flash</code>). Chosen for its free tier (20 req/day), strong instruction-following critical for context grounding, and fast response times. The app runs fully without an API key via KB fallback &mdash; zero credentials required for reviewers.</p>
+  <h2>Where AI Is and Is Not Used</h2>
+  <table>
+    <thead><tr><th>Task</th><th>AI?</th><th>Reason</th></tr></thead>
+    <tbody>
+      <tr><td>Intent detection</td><td>No</td><td>Deterministic; regex is faster and testable</td></tr>
+      <tr><td>KB retrieval scoring</td><td>No</td><td>Keyword overlap &mdash; sufficient at 15-fact scale</td></tr>
+      <tr><td>Date / guest validation</td><td>No</td><td>Pure arithmetic</td></tr>
+      <tr><td>Room availability calculation</td><td>No</td><td>Deterministic business logic</td></tr>
+      <tr><td>Natural-language answer generation</td><td><strong>Yes</strong></td><td>Only task requiring fluent prose output</td></tr>
+      <tr><td>Availability result formatting</td><td>No</td><td>Structured data inserted directly into response</td></tr>
+    </tbody>
+  </table>
+  <h2>Grounding System Prompt</h2>
+<pre><code>You are a helpful hotel concierge for Harborview Grand.
+Answer ONLY using the following hotel information. If the answer
+cannot be found in the provided information, say you don't have
+that information rather than guessing.
+
+Hotel Information:
+{retrieved knowledge-base chunks}
+
+Keep your answer concise, friendly, and professional.</code></pre>
+  <h2>Fallback Chain</h2>
+<pre><code>Guest question
+  &rarr; Retrieve KB chunks
+  &rarr; No chunks match   &rarr; "I don't have that information" (no LLM)
+  &rarr; Chunks found      &rarr; Call Gemini API
+      Gemini succeeds &rarr; Return LLM response
+      Gemini fails    &rarr; mockAnswer() from KB chunks (silent)</code></pre>
+</div>
+
+<!-- PAGE 11: SECTION 9 -->
+<div class="page">
+  <div class="eyebrow">Section 9</div>
+  <h1>Knowledge Base</h1>
+  <p>Stored in <code>backend/src/data/knowledgeBase.json</code>. Three top-level keys: <code>hotel</code>, <code>rooms</code>, and <code>faqs</code>. On every request, <code>retrievalService</code> keyword-scores all chunks and returns the top matches as LLM grounding context.</p>
+<pre><code>{
+  "hotel": {
+    "name": "Harborview Grand",
+    "checkInTime": "3:00 PM",
+    "checkOutTime": "11:00 AM",
+    "cancellationPolicy": "Free cancellation up to 48 hours before check-in...",
+    "breakfast": "Complimentary continental breakfast included...",
+    "amenities": [
+      { "name": "Outdoor Heated Pool",
+        "details": "Open 7:00 AM - 9:00 PM, 2nd floor terrace" },
+      { "name": "Waterfront Spa and Wellness Pavilion" },
+      { "name": "The Harbor Room",
+        "details": "Breakfast daily 7:00 AM - 10:30 AM" },
+      { "name": "The Terrace Lounge and Bar",
+        "details": "Cocktails 4:00 PM - 11:00 PM, ocean view" }
+    ]
+  },
+  "rooms": [
+    { "id": "standard-queen", "name": "Standard Queen",
+      "maxGuests": 2, "pricePerNight": 149 },
+    { "id": "deluxe-king", "name": "Deluxe King",
+      "maxGuests": 2, "pricePerNight": 189 },
+    { "id": "triple-room", "name": "Triple Room",
+      "maxGuests": 3, "pricePerNight": 219 },
+    { "id": "family-suite", "name": "Family Suite",
+      "maxGuests": 4, "pricePerNight": 279 }
+  ],
+  "faqs": [
+    { "question": "What is the cancellation policy?", "answer": "..." },
+    { "question": "Is there parking?", "answer": "..." }
+  ]
+}</code></pre>
+</div>
+
+<!-- PAGE 12: SECTION 10 -->
+<div class="page">
+  <div class="eyebrow">Section 10</div>
+  <h1>API Reference</h1>
+  <h2>POST /api/chat &mdash; Request</h2>
+<pre><code>{
+  "message": "What time is check-in?",
+  "conversationId": "optional-uuid",
+  "availability": {
+    "checkIn": "2027-03-01",
+    "checkOut": "2027-03-03",
+    "adults": 2
+  }
+}</code></pre>
+  <h2>Response &mdash; General Answer</h2>
+<pre><code>{
+  "conversationId": "uuid",
+  "type": "answer",
+  "reply": "Check-in is at 3:00 PM.",
+  "meta": { "usedFallback": false, "source": "gemini" }
+}</code></pre>
+  <h2>Response &mdash; Availability Results</h2>
+<pre><code>{
+  "conversationId": "uuid",
+  "type": "availability",
+  "reply": "Here's what I found for 2 night(s), 2 guest(s):",
+  "availability": {
+    "checkIn": "2027-03-01", "checkOut": "2027-03-03",
+    "adults": 2, "nights": 2,
+    "results": [{
+      "roomId": "standard-queen", "roomName": "Standard Queen",
+      "maxGuests": 2, "pricePerNight": 149,
+      "nights": 2, "totalPrice": 298,
+      "available": true, "unitsAvailable": 2
+    }]
+  }
+}</code></pre>
+  <h2>Response &mdash; Validation Error (400)</h2>
+<pre><code>{
+  "error": {
+    "code": "INVALID_REQUEST",
+    "message": "`message` is required and must be a non-empty string."
+  }
+}</code></pre>
+  <h2>GET /api/health</h2>
+<pre><code>{ "status": "ok" }</code></pre>
+</div>
+
+<!-- PAGE 13: SECTION 11 -->
+<div class="page">
+  <div class="eyebrow">Section 11</div>
+  <h1>Test Coverage</h1>
+  <h2>Backend &mdash; Jest (27 / 27 passing)</h2>
+  <table>
+    <thead><tr><th>Suite</th><th>Tests</th><th>What is Covered</th></tr></thead>
+    <tbody>
+      <tr><td><code>chat.test.js</code></td><td>12</td><td>Full API: FAQ answers, follow-ups, availability, validation errors, fallbacks, 404, 500</td></tr>
+      <tr><td><code>availabilityService.test.js</code></td><td>12</td><td>Room results, night calculation, validation edge cases, determinism</td></tr>
+      <tr><td><code>retrieval_intent.test.js</code></td><td>3</td><td>Intent detection accuracy, KB retrieval scoring</td></tr>
+    </tbody>
+  </table>
+  <h2>Frontend &mdash; Playwright E2E (4 / 4 passing)</h2>
+  <table>
+    <thead><tr><th>Test</th><th>What is Covered</th></tr></thead>
+    <tbody>
+      <tr><td>Load the chat interface</td><td>Page renders, welcome message visible, suggested chips present</td></tr>
+      <tr><td>Send a message and receive response</td><td>Full round-trip to backend; response bubble appears in chat</td></tr>
+      <tr><td>Show the availability form</td><td>Clicking the chip shows the date/guest input form</td></tr>
+      <tr><td>Handle error state gracefully</td><td>Red error bubble shown when backend is unreachable</td></tr>
+    </tbody>
+  </table>
+  <h2>Manual Test Scenarios (All Pass)</h2>
+  <table>
+    <thead><tr><th>Scenario</th><th>Result</th></tr></thead>
+    <tbody>
+      <tr><td>All 6 required questions answered correctly</td><td>&#10003; Pass</td></tr>
+      <tr><td>Typing indicator shown during loading</td><td>&#10003; Pass</td></tr>
+      <tr><td>Follow-up questions use conversation context</td><td>&#10003; Pass</td></tr>
+      <tr><td>Invalid dates rejected with clear message</td><td>&#10003; Pass</td></tr>
+      <tr><td>Out-of-scope question &mdash; no hallucination</td><td>&#10003; Pass</td></tr>
+      <tr><td>Backend offline &mdash; frontend shows error bubble</td><td>&#10003; Pass</td></tr>
+      <tr><td>Page refresh &mdash; no hydration error in console</td><td>&#10003; Pass</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- PAGE 14: SECTION 12 -->
+<div class="page">
+  <div class="eyebrow">Section 12</div>
+  <h1>Assignment Completion Checklist</h1>
+  <table>
+    <thead><tr><th>Requirement</th><th>Status</th><th>Evidence</th></tr></thead>
+    <tbody>
+      <tr><td>Chat UI for hotel questions</td><td>&#10003; Complete</td><td><code>pages/index.js</code>, <code>ChatWindow.js</code></td></tr>
+      <tr><td>All 6 required questions handled</td><td>&#10003; Complete</td><td>Sidebar chips + backend intent routing</td></tr>
+      <tr><td>Room availability form (dates + guests)</td><td>&#10003; Complete</td><td><code>AvailabilityForm.js</code></td></tr>
+      <tr><td>Per-room availability results displayed</td><td>&#10003; Complete</td><td><code>AvailabilityResults</code> component</td></tr>
+      <tr><td>Multi-turn conversation context</td><td>&#10003; Complete</td><td><code>conversationStore.js</code>, <code>conversationId</code></td></tr>
+      <tr><td>LLM integration (Gemini)</td><td>&#10003; Complete</td><td><code>llmService.js</code></td></tr>
+      <tr><td>Knowledge base (hotel facts)</td><td>&#10003; Complete</td><td><code>knowledgeBase.json</code></td></tr>
+      <tr><td>Grounded answers &mdash; no hallucination</td><td>&#10003; Complete</td><td>System prompt + retrieval gate</td></tr>
+      <tr><td>Fallback for unsupported questions</td><td>&#10003; Complete</td><td><code>FALLBACK_MESSAGE</code> in <code>llmService.js</code></td></tr>
+      <tr><td>Loading / error states in UI</td><td>&#10003; Complete</td><td>Typing bubble + red error bubble</td></tr>
+      <tr><td>Backend API with clean JSON shape</td><td>&#10003; Complete</td><td><code>POST /api/chat</code> documented contract</td></tr>
+      <tr><td>Automated backend tests (27)</td><td>&#10003; Complete</td><td><code>npm test</code> &rarr; 27/27</td></tr>
+      <tr><td>Playwright E2E tests (4)</td><td>&#10003; Complete</td><td><code>npm run test:e2e</code> &rarr; 4/4</td></tr>
+      <tr><td>README with setup instructions</td><td>&#10003; Complete</td><td><code>README.md</code></td></tr>
+      <tr><td>Architecture documentation</td><td>&#10003; Complete</td><td><code>docs/ARCHITECTURE.md</code></td></tr>
+      <tr><td>Test plan with scenarios</td><td>&#10003; Complete</td><td><code>docs/TEST_PLAN.md</code></td></tr>
+      <tr><td>Requirement audit</td><td>&#10003; Complete</td><td><code>docs/REQUIREMENT_AUDIT.md</code></td></tr>
+      <tr><td>GitHub repository</td><td>&#10003; Complete</td><td>github.com/Sumitboii/HARBORVIEW-GRAND</td></tr>
+      <tr><td>Deployed live on Render</td><td>&#10003; Complete</td><td>harborview-grand.onrender.com</td></tr>
+    </tbody>
+  </table>
+  <h2>Intentionally Out of Scope</h2>
+  <table>
+    <thead><tr><th>Item</th><th>Reason</th></tr></thead>
+    <tbody>
+      <tr><td>Real booking / payment</td><td>Brief requires availability only, not booking transactions</td></tr>
+      <tr><td>Persistent DB for conversations</td><td>Demo-scale; in-memory sufficient; noted as production gap</td></tr>
+      <tr><td>Embedding-based retrieval</td><td>15 KB facts; keyword overlap is transparent and testable</td></tr>
+      <tr><td>Auth / rate limiting</td><td>Marked optional in brief; time-boxed scope</td></tr>
+    </tbody>
+  </table>
+  <p><strong>Assignment completion: 100% of required deliverables implemented and tested.</strong></p>
+</div>
+
+<!-- PAGE 15: SECTION 13 -->
+<div class="page">
+  <div class="eyebrow">Section 13</div>
+  <h1>Design Decisions &amp; Trade-offs</h1>
+  <h2>Why Two-Column Layout?</h2>
+  <p>A sidebar + chat panel mirrors real hotel concierge apps. Hotel context stays permanently visible while the chat remains focused. Each sidebar item triggers a precise chat query on click, reducing friction for the most common guest questions.</p>
+  <h2>Why Keep Availability Deterministic?</h2>
+  <p>LLMs can hallucinate numbers. A guest making a booking decision based on wrong room inventory would be a serious UX failure. Availability is a pure function &mdash; same input always produces the same output &mdash; and the LLM never touches inventory data at any point in the pipeline.</p>
+  <h2>Why Keyword Retrieval Over Embeddings?</h2>
+  <p>The KB has ~15 facts. Embeddings would require a vector database, an extra API call per query, and a model dependency for zero accuracy improvement at this scale. Keyword overlap is faster, cheaper, fully deterministic, and passes unit tests reliably. At production scale with hundreds of entries, embeddings become worthwhile.</p>
+  <h2>Why In-Memory Conversation Store?</h2>
+  <p>A real database requires schema migrations, connection management, and deployment setup for a demo project. The trade-off is explicit: conversations reset on server restart &mdash; acceptable for assignment scope, noted clearly in the README as a known production gap.</p>
+  <h2>Why Gemini Instead of Another LLM?</h2>
+  <p>Gemini 2.0 Flash offers a free tier (20 req/day), strong instruction-following, and low latency. Critically, the app works fully without any API key via KB fallback &mdash; graders and reviewers can evaluate the entire system with zero credentials.</p>
+  <h2>Why suppressHydrationWarning for Timestamps?</h2>
+  <p>Next.js SSR (Node.js) and the browser both call <code>toLocaleTimeString()</code> but return different case formats (<code>am</code> vs <code>AM</code>) due to locale differences between environments. <code>suppressHydrationWarning</code> on the timestamp <code>&lt;span&gt;</code> is React's recommended minimal fix for dynamic time displays &mdash; no full SSR disable needed.</p>
+</div>
+
+<!-- PAGE 16: SECTION 14 -->
+<div class="page last">
+  <div class="eyebrow">Section 14</div>
+  <h1>How to Run Locally</h1>
+  <h2>Prerequisites</h2>
+  <ul>
+    <li>Node.js 18 or higher</li>
+    <li>npm</li>
+    <li>Optional: a Gemini API key (the app works fully without one)</li>
+  </ul>
+  <h2>1. Start the Backend</h2>
+<pre><code>cd backend
+npm install
+cp .env.example .env
+# Optional: edit .env and add GEMINI_API_KEY=your_key
+npm run dev
+# Server listening on http://localhost:4000</code></pre>
+  <h2>2. Start the Frontend</h2>
+<pre><code>cd frontend
+npm install
+cp .env.example .env
+# .env sets NEXT_PUBLIC_BACKEND_URL=http://localhost:4000
+npm run dev
+# Open http://localhost:3000 in your browser</code></pre>
+  <h2>3. Run the Test Suites</h2>
+<pre><code># Backend -- 27 Jest tests
+cd backend &amp;&amp; npm test
+
+# Frontend E2E -- 4 Playwright tests (both servers must be running)
+cd frontend &amp;&amp; npm run test:e2e</code></pre>
+  <h2>Environment Variables</h2>
+  <table>
+    <thead><tr><th>File</th><th>Key</th><th>Value / Notes</th></tr></thead>
+    <tbody>
+      <tr><td>backend <code>.env</code></td><td><code>PORT</code></td><td>4000</td></tr>
+      <tr><td>backend <code>.env</code></td><td><code>GEMINI_API_KEY</code></td><td>Optional &mdash; app works without it</td></tr>
+      <tr><td>backend <code>.env</code></td><td><code>GEMINI_LLM_MODEL</code></td><td>models/gemini-2.0-flash</td></tr>
+      <tr><td>backend <code>.env</code></td><td><code>ALLOWED_ORIGIN</code></td><td>http://localhost:3000</td></tr>
+      <tr><td>frontend <code>.env</code></td><td><code>NEXT_PUBLIC_BACKEND_URL</code></td><td>http://localhost:4000</td></tr>
+    </tbody>
+  </table>
+  <div class="doc-footer">
+    Designed &amp; Developed by <strong>Sumit Kumar Singh</strong> &mdash; Full-Stack AI Solutions &middot; Harborview Grand Concierge System
+  </div>
+</div>
+
+</body>
+</html>
