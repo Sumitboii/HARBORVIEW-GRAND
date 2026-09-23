@@ -4,13 +4,13 @@ services:
     name: harborview-grand-api
     runtime: node
     rootDir: backend
-    buildCommand: npm install
+    buildCommand: npm install --omit=dev
     startCommand: npm start
     envVars:
       - key: NODE_ENV
         value: production
       - key: PORT
-        generateValue: false
+        value: 4000
       - key: GEMINI_API_KEY
         sync: false          # set manually in Render dashboard
       - key: GEMINI_LLM_MODEL
@@ -30,3 +30,5 @@ services:
         value: production
       - key: NEXT_PUBLIC_BACKEND_URL
         value: https://harborview-grand-api.onrender.com
+      - key: PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD
+        value: "1"
