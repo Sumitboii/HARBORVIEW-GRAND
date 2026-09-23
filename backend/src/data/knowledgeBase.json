@@ -1,0 +1,52 @@
+{
+  "hotel": {
+    "name": "Harborview Grand Hotel",
+    "checkInTime": "3:00 PM",
+    "checkOutTime": "11:00 AM",
+    "cancellationPolicy": "Free cancellation up to 48 hours before check-in. Cancellations within 48 hours are charged one night's rate.",
+    "breakfast": "A complimentary continental breakfast is included with every room, served 7:00 AM–10:30 AM in the Harbor Room.",
+    "amenities": [
+      { "name": "Swimming Pool", "details": "Outdoor heated pool, open 7:00 AM–9:00 PM, located on the 2nd floor terrace." },
+      { "name": "Gym", "details": "24-hour fitness center on the 3rd floor." },
+      { "name": "Free WiFi", "details": "Complimentary high-speed WiFi throughout the hotel." },
+      { "name": "Parking", "details": "On-site valet parking, $25/night." },
+      { "name": "Spa", "details": "Full-service spa, open 9:00 AM–7:00 PM, reservations recommended." },
+      { "name": "Pet Policy", "details": "Pets under 25lbs allowed for a $50/stay fee." }
+    ]
+  },
+  "rooms": [
+    {
+      "id": "standard-queen",
+      "name": "Standard Queen",
+      "maxGuests": 2,
+      "pricePerNight": 149,
+      "description": "Cozy room with one queen bed, city view, 300 sq ft."
+    },
+    {
+      "id": "deluxe-king",
+      "name": "Deluxe King",
+      "maxGuests": 2,
+      "pricePerNight": 189,
+      "description": "Spacious room with one king bed, harbor view, 400 sq ft."
+    },
+    {
+      "id": "family-suite",
+      "name": "Family Suite",
+      "maxGuests": 4,
+      "pricePerNight": 279,
+      "description": "Two-room suite with one king bed and a pull-out sofa, sleeps up to 4, 650 sq ft."
+    },
+    {
+      "id": "triple-room",
+      "name": "Triple Room",
+      "maxGuests": 3,
+      "pricePerNight": 219,
+      "description": "One queen bed plus a twin bed, ideal for 3 guests, 450 sq ft."
+    }
+  ],
+  "faqs": [
+    { "question": "Is smoking allowed?", "answer": "The hotel is entirely non-smoking. Designated outdoor smoking areas are available at the main entrance." },
+    { "question": "Is there an airport shuttle?", "answer": "Yes, a complimentary shuttle runs to and from the airport every 30 minutes, 5:00 AM–11:00 PM." },
+    { "question": "What is the minimum check-in age?", "answer": "Guests must be at least 18 years old to check in without a parent or guardian." }
+  ]
+}
