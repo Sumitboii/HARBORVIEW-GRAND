@@ -1,16 +1,16 @@
 const kb = require("../data/knowledgeBase.json");
 
 /**
- * Flattens the knowledge base into retrievable text chunks with a source
- * label, so retrieved context can be cited and the LLM has clearly scoped
- * facts to ground its answer in (instead of open-ended freeform knowledge).
+ * Flattens the knowledge base into retrievable text chunks with a source label,
+ * so retrieved context can be cited and the LLM has clearly scoped facts to
+ * ground its answer in.
  */
 function buildChunks() {
   const chunks = [];
-  chunks.push({ source: "hotel.checkInTime", text: `Check-in time is ${kb.hotel.checkInTime}.` });
-  chunks.push({ source: "hotel.checkOutTime", text: `Check-out time is ${kb.hotel.checkOutTime}.` });
+  chunks.push({ source: "hotel.checkInTime",        text: `Check-in time is ${kb.hotel.checkInTime}.` });
+  chunks.push({ source: "hotel.checkOutTime",       text: `Check-out time is ${kb.hotel.checkOutTime}.` });
   chunks.push({ source: "hotel.cancellationPolicy", text: `Cancellation policy: ${kb.hotel.cancellationPolicy}` });
-  chunks.push({ source: "hotel.breakfast", text: `Breakfast: ${kb.hotel.breakfast}` });
+  chunks.push({ source: "hotel.breakfast",          text: `Breakfast: ${kb.hotel.breakfast}` });
   kb.hotel.amenities.forEach((a) => {
     chunks.push({ source: `amenity.${a.name}`, text: `${a.name}: ${a.details}` });
   });
@@ -39,15 +39,12 @@ function tokenize(text) {
     .toLowerCase()
     .replace(/[^a-z0-9\s]/g, " ")
     .split(/\s+/)
-    // drop stopwords and stray single-character fragments (e.g. the "s"
-    // left behind by apostrophes in "what's" / "night's")
     .filter((t) => t && t.length > 1 && !STOPWORDS.has(t));
 }
 
 /**
- * Very small keyword-overlap retriever. Returns the top matching chunks
- * (and a confidence score) so the caller can decide whether there's
- * enough grounding to answer, or whether to fall back.
+ * Keyword-overlap retriever. Returns the top matching chunks so the caller
+ * can decide whether there is enough grounding to answer, or fall back.
  */
 function retrieve(query, topK = 4) {
   const queryTokens = new Set(tokenize(query));
@@ -56,9 +53,7 @@ function retrieve(query, topK = 4) {
   const scored = CHUNKS.map((chunk) => {
     const chunkTokens = tokenize(chunk.text);
     let overlap = 0;
-    chunkTokens.forEach((t) => {
-      if (queryTokens.has(t)) overlap += 1;
-    });
+    chunkTokens.forEach((t) => { if (queryTokens.has(t)) overlap += 1; });
     return { ...chunk, score: overlap };
   });
 

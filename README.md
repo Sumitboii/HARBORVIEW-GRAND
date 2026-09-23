@@ -1,14 +1,34 @@
-# Harborview Grand — Hotel Guest Assistant
+# Harborview Grand — AI Guest Concierge
 
-A small full-stack guest assistant: a chat UI where guests can ask hotel
-questions and check room availability.
+A full-stack hotel guest assistant: a two-panel chat interface where guests ask natural-language questions about the hotel and check live room availability, powered by Google Gemini and grounded in a structured knowledge base.
 
-```
-hotel-assistant/
-  backend/     Express API: knowledge-base Q&A, intent routing, availability
-  frontend/    Next.js chat UI
-  docs/        Requirements, architecture, API/data contracts, test plan, audit
-```
+**Live demo:** [harborview-grand.onrender.com](https://harborview-grand.onrender.com)  
+**Developer:** Sumit Kumar Singh
+
+---
+
+## What it does
+
+- Answers hotel questions in natural language (check-in times, amenities, policies, room types)
+- Checks room availability via a structured date/guest-count form
+- Maintains multi-turn conversation context across messages
+- Falls back gracefully when the LLM is unavailable — answers are served directly from the knowledge base
+- Prevents hallucination: availability numbers never pass through the LLM
+
+---
+
+## Tech stack
+
+| Layer | Technology |
+|---|---|
+| Frontend | Next.js 14, React 18, CSS |
+| Backend | Node.js, Express |
+| AI | Google Gemini 2.0 Flash (REST API) |
+| Knowledge base | JSON flat file |
+| Tests | Jest + Supertest (27), Playwright E2E (4) |
+| Hosting | Render (Blueprint deploy via `render.yaml`) |
+
+---
 
 ## Quick start
 
@@ -16,117 +36,148 @@ hotel-assistant/
 ```bash
 cd backend
 npm install
-cp .env.example .env   # optional — see below
-npm run dev             # http://localhost:4000
+cp .env.example .env        # add GEMINI_API_KEY if you have one (optional)
+npm run dev                  # http://localhost:4000
 ```
 
-**Frontend** (in a second terminal)
+**Frontend** (second terminal)
 ```bash
 cd frontend
 npm install
-cp .env.example .env
-npm run dev              # http://localhost:3000
+cp .env.example .env         # sets NEXT_PUBLIC_BACKEND_URL=http://localhost:4000
+npm run dev                  # http://localhost:3000
 ```
 
-Open http://localhost:3000, ask a question (e.g. "What time is check-in?"),
-then try "Check room availability" for the date/guest form.
+Open [http://localhost:3000](http://localhost:3000) and start chatting.
 
-### Running without an LLM API key
-The backend works out-of-the-box without an API key — it uses a **grounded knowledge-base fallback mode** that answers directly from verified hotel data (flagged in the response as `"source": "mock_llm"`), so the entire application is runnable, demoable, and testable with zero external credentials. You can also configure `GEMINI_API_KEY` (Gemini 3.6 Flash / Gemini API) or `ANTHROPIC_API_KEY` in `backend/.env` for generative responses.
+### Running without an API key
 
-### Tests
+The app runs fully without `GEMINI_API_KEY` — it falls back to a grounded knowledge-base mode that answers directly from verified hotel data. Add a real key in `backend/.env` to get Gemini-generated responses.
+
+---
+
+## Environment variables
+
+**`backend/.env`**
+```
+PORT=4000
+GEMINI_API_KEY=your_key_here          # optional
+GEMINI_LLM_MODEL=models/gemini-2.0-flash
+ALLOWED_ORIGIN=http://localhost:3000  # set to your frontend URL in production
+```
+
+**`frontend/.env`**
+```
+NEXT_PUBLIC_BACKEND_URL=http://localhost:4000
+```
+
+---
+
+## Tests
+
 ```bash
-# Backend unit & integration test suite (27 tests)
-cd backend
-npm test
+# Backend — 27 unit + integration tests
+cd backend && npm test
 
-# Frontend Playwright end-to-end suite (4 scenarios)
-cd frontend
-npm run test:e2e
+# Frontend — 4 Playwright E2E tests (requires both servers running)
+cd frontend && npm run test:e2e
 ```
 
-## API examples
+---
+
+## API reference
+
+### `POST /api/chat`
 
 ```bash
 # General question
-curl -s -X POST http://localhost:4000/api/chat \
+curl -s -X POST https://harborview-grand-api.onrender.com/api/chat \
   -H "Content-Type: application/json" \
   -d '{"message":"What time is check-in?"}'
 
-# Follow-up (reuse conversationId from the previous response)
-curl -s -X POST http://localhost:4000/api/chat \
+# Follow-up (pass conversationId from previous response)
+curl -s -X POST https://harborview-grand-api.onrender.com/api/chat \
   -H "Content-Type: application/json" \
-  -d '{"message":"And check-out?","conversationId":"<id-from-above>"}'
+  -d '{"message":"And check-out?","conversationId":"<id>"}'
 
-# Availability
-curl -s -X POST http://localhost:4000/api/chat \
+# Availability check
+curl -s -X POST https://harborview-grand-api.onrender.com/api/chat \
   -H "Content-Type: application/json" \
-  -d '{"message":"check availability","availability":{"checkIn":"2027-03-01","checkOut":"2027-03-03","adults":2}}'
+  -d '{"availability":{"checkIn":"2027-06-01","checkOut":"2027-06-03","adults":2}}'
 ```
 
-Full endpoint contract: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
+**Response shape**
+```json
+{
+  "conversationId": "uuid",
+  "type": "answer",
+  "reply": "Check-in is at 3:00 PM.",
+  "meta": { "usedFallback": false, "source": "gemini" }
+}
+```
+
+### `GET /api/health`
+```json
+{ "status": "ok" }
+```
+
+---
+
+## Project structure
+
+```
+hotel-assistant/
+├── backend/
+│   ├── src/
+│   │   ├── app.js                   # Express factory, CORS, error handlers
+│   │   ├── server.js                # Entry point
+│   │   ├── routes/chat.js           # POST /api/chat — intent routing hub
+│   │   ├── services/
+│   │   │   ├── intentService.js     # Keyword/regex intent classifier
+│   │   │   ├── retrievalService.js  # Keyword-overlap KB retrieval
+│   │   │   ├── llmService.js        # Gemini API + KB fallback
+│   │   │   ├── availabilityService.js
+│   │   │   └── conversationStore.js # In-memory multi-turn context
+│   │   └── data/knowledgeBase.json  # Hotel facts
+│   └── package.json
+├── frontend/
+│   ├── pages/index.js               # Two-column layout + sidebar handlers
+│   ├── components/
+│   │   ├── ChatWindow.js
+│   │   ├── MessageBubble.js
+│   │   └── AvailabilityForm.js
+│   └── styles/globals.css
+├── docs/
+│   ├── PROJECT_REPORT.md
+│   ├── ARCHITECTURE.md
+│   ├── REQUIREMENTS.md
+│   ├── TEST_PLAN.md
+│   └── REQUIREMENT_AUDIT.md
+├── render.yaml                      # Render Blueprint (deploys both services)
+└── README.md
+```
+
+---
+
+## Deployment
+
+The project deploys automatically to Render via `render.yaml` Blueprint.  
+Two services are created: `harborview-grand-api` (backend) and `harborview-grand` (frontend).
+
+Set `GEMINI_API_KEY` in the Render dashboard under the backend service's environment variables.
+
+---
 
 ## Documentation
 
-- [`docs/REQUIREMENTS.md`](docs/REQUIREMENTS.md) — requirements checklist (REQ-IDs) + acceptance criteria + use cases
-- [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — architecture, API contract, data contract, AI design
-- [`docs/TEST_PLAN.md`](docs/TEST_PLAN.md) — 16 test scenarios mapped to requirements, with observed results
-- [`docs/REQUIREMENT_AUDIT.md`](docs/REQUIREMENT_AUDIT.md) — final PASS / NOT IMPLEMENTED audit
+| File | Contents |
+|---|---|
+| `docs/PROJECT_REPORT.md` | Full project report — architecture, decisions, test results |
+| `docs/ARCHITECTURE.md` | API contract, data flow, AI design |
+| `docs/REQUIREMENTS.md` | Requirement matrix with IDs and evidence |
+| `docs/TEST_PLAN.md` | 16 test scenarios with observed results |
+| `docs/REQUIREMENT_AUDIT.md` | Final PASS / out-of-scope audit |
 
-## Product & engineering notes
+---
 
-**Customer problem:** front-desk staff get repeatedly asked the same small set
-of questions (check-in time, amenities, policies, "is there a room for us"),
-and guests often want an answer outside staffed hours. A guest assistant
-answers the repetitive questions instantly and routes availability to a
-reliable, non-hallucinating source, freeing staff for things that actually
-need a human.
-
-**Guest journey:** land on the page → ask a free-text question → get an
-answer grounded in real hotel data → ask a follow-up in the same thread →
-decide to check dates → fill a short structured form (not free text, since
-dates/guest-count need to be exact) → see availability per room type →
-either book off-app (real booking is out of scope) or ask another question.
-
-**Why the frontend looks the way it does:** a single persistent chat thread
-(not a multi-page flow) keeps follow-ups natural. Availability uses a
-dedicated inline form instead of asking the guest to type dates in prose —
-structured input is easier to validate and less error-prone than parsing
-free text for dates.
-
-**AI vs. deterministic split:**
-- **AI (LLM):** phrasing natural-language answers to general questions,
-  grounded strictly in retrieved knowledge-base text; using conversation
-  history for follow-ups.
-- **Deterministic:** intent detection (keyword/pattern rules), retrieval
-  (keyword overlap over the knowledge base), date/guest-count validation,
-  and the availability check itself. The LLM never sees or invents
-  availability numbers — see `docs/ARCHITECTURE.md` for why.
-
-**What can go wrong with the AI response, and mitigations:**
-- *Hallucination* — the system prompt restricts the model to only the
-  retrieved context and instructs it to say "I don't know" rather than
-  guess; if retrieval finds nothing, the LLM is skipped entirely and a
-  fixed fallback message is returned.
-- *Wrong retrieval* — keyword overlap can miss paraphrased questions; a
-  production version would use embedding-based retrieval.
-- *Model/API failure* — wrapped in try/catch; on failure the guest still
-  gets the raw retrieved facts instead of a generic error, so a network
-  blip doesn't fully block an answer.
-
-**Measuring usefulness (post-launch):** % of questions answered without a
-fallback, % of sessions with a follow-up (proxy for the guest trusting the
-first answer), thumbs-up/down per answer, and how often "unsupported
-question" fallbacks recur (signals gaps in the knowledge base).
-
-**What I'd improve before production:** real embedding-based retrieval;
-a real database instead of in-memory conversation state; rate limiting and
-auth; a real PMS integration behind `checkAvailability`; streaming responses;
-structured logging/observability (tracing, latency, cost per turn);
-automated accessibility and E2E (Playwright) tests.
-
-## AI tools used
-
-Claude (Anthropic) was used to design and implement this project end-to-end,
-including the requirements breakdown, architecture, backend, frontend, and
-tests in `docs/`.
+*Designed and built by **Sumit Kumar Singh***
