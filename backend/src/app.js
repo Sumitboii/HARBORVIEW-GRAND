@@ -8,7 +8,20 @@ const chatRouter = require("./routes/chat");
 function createApp() {
   const app = express();
 
-  app.use(cors());
+  const allowedOrigins = [
+    process.env.ALLOWED_ORIGIN,        // https://harborview-grand.onrender.com (production)
+    "http://localhost:3000",            // local dev
+    "http://127.0.0.1:3000",
+  ].filter(Boolean);
+
+  app.use(cors({
+    origin: (origin, callback) => {
+      // Allow requests with no origin (curl, Render health checks, same-origin)
+      if (!origin || allowedOrigins.includes(origin)) return callback(null, true);
+      callback(new Error(`CORS: origin ${origin} not allowed`));
+    },
+    credentials: true,
+  }));
   app.use(express.json());
 
   // Public health check
