@@ -2,7 +2,11 @@ import { useEffect, useRef, useState, useImperativeHandle, forwardRef } from "re
 import { MessageBubble } from "./MessageBubble";
 import { AvailabilityForm } from "./AvailabilityForm";
 
-const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4000";
+// If NEXT_PUBLIC_BACKEND_URL is provided, use it; otherwise default to "" in browser (same-origin /api/...) or localhost:4000 in local dev
+const BACKEND_URL =
+  process.env.NEXT_PUBLIC_BACKEND_URL !== undefined
+    ? process.env.NEXT_PUBLIC_BACKEND_URL
+    : (typeof window !== "undefined" ? "" : "http://localhost:4000");
 
 const INITIAL_QUESTIONS = [
   { id: "checkin", text: "What time is check-in?" },

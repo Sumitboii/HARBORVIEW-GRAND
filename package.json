@@ -1,0 +1,9 @@
+{
+  "name": "hotel-assistant-app",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Full-stack runner for Harborview Grand Hotel Assistant",
+  "scripts": {
+    "start": "node start.js"
+  }
+}
