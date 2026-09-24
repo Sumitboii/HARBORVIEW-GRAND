@@ -5,18 +5,22 @@ services:
     runtime: node
     rootDir: backend
     buildCommand: npm install --omit=dev
-    startCommand: npm start
+    startCommand: node src/server.js
+    plan: free
     envVars:
       - key: NODE_ENV
         value: production
       - key: PORT
         value: 4000
       - key: GEMINI_API_KEY
-        sync: false          # set manually in Render dashboard
+        sync: false
       - key: GEMINI_LLM_MODEL
         value: models/gemini-2.0-flash
       - key: ALLOWED_ORIGIN
-        value: https://harborview-grand.onrender.com
+        fromService:
+          type: web
+          name: harborview-grand
+          property: url
 
   # ── Frontend (Next.js) ───────────────────────────────────────────────────────
   - type: web
@@ -25,10 +29,14 @@ services:
     rootDir: frontend
     buildCommand: npm install && npm run build
     startCommand: npm start
+    plan: free
     envVars:
       - key: NODE_ENV
         value: production
       - key: NEXT_PUBLIC_BACKEND_URL
-        value: https://harborview-grand-api.onrender.com
+        fromService:
+          type: web
+          name: harborview-grand-api
+          property: url
       - key: PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD
         value: "1"
