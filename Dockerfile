@@ -11,7 +11,7 @@ RUN npm ci
 # Stage 2: Build frontend
 FROM node:20-alpine AS frontend-builder
 WORKDIR /app/frontend
-ARG NEXT_PUBLIC_BACKEND_URL=https://harborview-grand.onrender.com/api
+ARG NEXT_PUBLIC_BACKEND_URL=https://harborview-grand.onrender.com
 ENV NEXT_PUBLIC_BACKEND_URL=$NEXT_PUBLIC_BACKEND_URL \
     PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 \
     NEXT_TELEMETRY_DISABLED=1 \

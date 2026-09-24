@@ -2,11 +2,12 @@ import { useEffect, useRef, useState, useImperativeHandle, forwardRef } from "re
 import { MessageBubble } from "./MessageBubble";
 import { AvailabilityForm } from "./AvailabilityForm";
 
-// If NEXT_PUBLIC_BACKEND_URL is provided, use it; otherwise default to "" in browser (same-origin /api/...) or localhost:4000 in local dev
-const BACKEND_URL =
+// Normalize backend URL: strip trailing slash or /api so endpoints always map cleanly to /api/chat
+const rawUrl =
   process.env.NEXT_PUBLIC_BACKEND_URL !== undefined
     ? process.env.NEXT_PUBLIC_BACKEND_URL
     : (typeof window !== "undefined" ? "" : "http://localhost:4000");
+const BACKEND_URL = (rawUrl || "").replace(/\/api\/?$/, "").replace(/\/+$/, "");
 
 const INITIAL_QUESTIONS = [
   { id: "checkin", text: "What time is check-in?" },
