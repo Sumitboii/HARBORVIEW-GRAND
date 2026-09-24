@@ -38,12 +38,16 @@ ENV NODE_ENV=production \
     NEXT_TELEMETRY_DISABLED=1 \
     PORT=3000
 
-# Only copy what Next.js needs to run in standalone-free mode
-COPY --from=builder /app/public           ./public
+# Copy .next (required for Next.js to run)
 COPY --from=builder /app/.next            ./.next
+
+# Copy runtime dependencies
 COPY --from=builder /app/node_modules     ./node_modules
 COPY --from=builder /app/package.json     ./package.json
 COPY --from=builder /app/next.config.js   ./next.config.js
+
+# Create public directory if needed (frontend doesn't use static files)
+RUN mkdir -p /app/public
 
 RUN chown -R appuser:appgroup /app
 
@@ -55,3 +59,4 @@ HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 \
   CMD wget -qO- http://localhost:3000 || exit 1
 
 CMD ["npm", "start"]
+
